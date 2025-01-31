@@ -1,0 +1,69 @@
+drop database if exists hito1prog;
+create database hito1prog;
+use hito1prog;
+
+create table usuarios(
+correo varchar(100) primary key not null,
+nombre varchar(50) not null,
+apellido1 varchar(50) not null,
+apellido2 varchar(50) not null,
+edad int not null
+);
+
+create table planes(
+id_plan int primary key,
+plan varchar(50),
+precio decimal(10,2)
+);
+
+create table paquetes(
+id_paquete int primary key,
+paquete varchar(50),
+precio decimal(10,2)
+);
+
+create table planes_usuarios (
+    correo varchar(100) not null,
+    id_plan int not null,
+    duracion int,
+    foreign key (correo) references usuarios(correo),
+    foreign key (id_plan) references planes(id_plan)
+);
+
+create table paquetes_usuarios (
+    correo varchar(100) not null,
+    id_paquete int not null,
+    foreign key (correo) references usuarios(correo),
+    foreign key (id_paquete) references paquetes(id_paquete)
+);
+
+insert into planes values
+(1,"Básico",9.99),
+(2,"Estándar",13.99),
+(3,"Premium",17.99);
+
+insert into paquetes values
+(1,"Deporte",6.99),
+(2,"Cine",7.99),
+(3,"Infantil",4.99);
+
+select * from paquetes where paquete != "Deporte";
+
+select * from usuarios;
+select * from planes_usuarios;
+select * from paquetes_usuarios;
+
+SELECT p.plan, p.precio 
+FROM planes p 
+JOIN planes_usuarios pu ON p.id_plan = pu.id_plan 
+WHERE pu.correo = 'usuario2@ejemplo.com';
+
+SELECT pu.duracion, p.precio * pu.duracion AS total_precio
+FROM planes p
+JOIN planes_usuarios pu ON p.id_plan = pu.id_plan
+WHERE pu.correo = 'usuario2@ejemplo.com';
+
+SELECT pa.paquete, pa.precio
+FROM paquetes pa
+JOIN paquetes_usuarios pu ON pa.id_paquete = pu.id_paquete
+WHERE pu.correo = 'usuario2@ejemplo.com';
